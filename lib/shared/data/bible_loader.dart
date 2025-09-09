@@ -1,14 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
-
 import 'database_helper.dart';
 
 class BibleLoader {
   static Map<String, dynamic>? _cache;
-
   static Map<String, dynamic>? _cacheNoDiacritics;
-
   static final Map<String, List<Map<String, String>>> searchIndex = {};
 
   static String removeDiacritics(String text) {
@@ -19,45 +15,85 @@ class BibleLoader {
   static Future<Map<String, dynamic>> loadBible() async {
     if (_cache != null) return _cache!;
 
-    final String response = await rootBundle.loadString(
-      'assets/data/bible.json',
-    );
-    final data = json.decode(response) as Map<String, dynamic>;
-    _cache = data;
-    _cacheNoDiacritics = {};
+    try {
+      print("📖 Start loading bible.json");
+      final String response = await rootBundle.loadString(
+        'assets/data/bible.json',
+      );
+      print("✅ bible.json loaded (${response.length} chars)");
 
-    for (var book in data.keys) {
-      final chapters = data[book] as Map<String, dynamic>;
-      final chaptersNoDiacritics = <String, Map<String, String>>{};
-
-      searchIndex[book] = [];
-
-      for (var chapterKey in chapters.keys) {
-        final verses = chapters[chapterKey] as Map<String, dynamic>;
-        final versesNoDiacritics = <String, String>{};
-
-        verses.forEach((verseNum, verseText) {
-          final text = verseText.toString();
-          versesNoDiacritics[verseNum] = removeDiacritics(text);
-
-          // إضافة للبحث
-          searchIndex[book]!.add({
-            'chapter': chapterKey,
-            'verse': verseNum,
-            'text': removeDiacritics(text),
-          });
-        });
-
-        chaptersNoDiacritics[chapterKey] = versesNoDiacritics;
-
-        // حفظ في DB كل إصحاح
-        await DatabaseHelper.setChapter(book, chapterKey, json.encode(verses));
+      Map<String, dynamic> data;
+      try {
+        data = json.decode(response) as Map<String, dynamic>;
+        print("✅ JSON decoded with ${data.keys.length} books");
+      } catch (e, st) {
+        print("❌ JSON decode error: $e");
+        print(st);
+        rethrow;
       }
 
-      _cacheNoDiacritics![book] = chaptersNoDiacritics;
-    }
+      _cache = data;
+      _cacheNoDiacritics = {};
 
-    return _cache!;
+      for (var book in data.keys) {
+        try {
+          final chapters = data[book] as Map<String, dynamic>;
+          final chaptersNoDiacritics = <String, Map<String, String>>{};
+          searchIndex[book] = [];
+
+          // لتجميع الإصحاحات في batch
+          final Map<String, String> chaptersForDb = {};
+
+          for (var chapterKey in chapters.keys) {
+            try {
+              final verses = chapters[chapterKey] as Map<String, dynamic>;
+              final versesNoDiacritics = <String, String>{};
+
+              verses.forEach((verseNum, verseText) {
+                final text = verseText.toString();
+                versesNoDiacritics[verseNum] = removeDiacritics(text);
+
+                // إضافة للبحث
+                searchIndex[book]!.add({
+                  'chapter': chapterKey,
+                  'verse': verseNum,
+                  'text': removeDiacritics(text),
+                });
+              });
+
+              chaptersNoDiacritics[chapterKey] = versesNoDiacritics;
+
+              // جهّز الكتاب كله عشان يتكتب مرة واحدة
+              chaptersForDb[chapterKey] = json.encode(verses);
+            } catch (e, st) {
+              print("❌ Error processing chapter $chapterKey in $book: $e");
+              print(st);
+            }
+          }
+
+          // ✅ كتابة كل الإصحاحات دفعة واحدة بالـ batch
+          try {
+            await DatabaseHelper.setBookChaptersBatch(book, chaptersForDb);
+          } catch (e, st) {
+            print("❌ DB batch insert error in $book: $e");
+            print(st);
+          }
+
+          _cacheNoDiacritics![book] = chaptersNoDiacritics;
+          print("✅ Finished book $book with ${chapters.keys.length} chapters");
+        } catch (e, st) {
+          print("❌ Error processing book $book: $e");
+          print(st);
+        }
+      }
+
+      print("🎉 Finished loadBible()");
+      return _cache!;
+    } catch (e, st) {
+      print("❌ Fatal error in loadBible: $e");
+      print(st);
+      rethrow;
+    }
   }
 
   static Future<Map<String, dynamic>?> getChapters(String book) async {

@@ -94,10 +94,10 @@ class DatabaseHelper {
 
   // ====== عمليات الكاش ======
   static Future<void> setChapter(
-    String book,
-    String chapter,
-    String value,
-  ) async {
+      String book,
+      String chapter,
+      String value,
+      ) async {
     final db = await database;
     await db.insert('cache', {
       'book': book,
@@ -105,7 +105,27 @@ class DatabaseHelper {
       'value': value,
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
+  static Future<void> setBookChaptersBatch(
+      String book,
+      Map<String, String> chapters,
+      ) async {
+    final db = await database;
+    final batch = db.batch();
 
+    chapters.forEach((chapter, value) {
+      batch.insert(
+        'cache',
+        {
+          'book': book,
+          'chapter': chapter,
+          'value': value,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    });
+
+    await batch.commit(noResult: true);
+  }
   static Future<String?> getChapter(String book, String chapter) async {
     final db = await database;
     final result = await db.query(

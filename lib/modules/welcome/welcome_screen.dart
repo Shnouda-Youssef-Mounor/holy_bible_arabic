@@ -17,12 +17,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setState(() {
       _loading = true;
     });
+    try {
+      await BibleLoader.loadBible();
+      if (!mounted) return;
 
-    await BibleLoader.loadBible();
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+    catch(e){
+      print(e);
+    }
 
-    if (!mounted) return;
-
-    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
