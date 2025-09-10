@@ -1,8 +1,8 @@
 import 'package:arabic_holy_bible/shared/colors/app_colors.dart';
 import 'package:arabic_holy_bible/shared/data/database_helper.dart';
+import 'package:arabic_holy_bible/shared/widgets/share_verse_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class FavScreen extends StatefulWidget {
   const FavScreen({super.key});
@@ -53,10 +53,7 @@ class _FavScreenState extends State<FavScreen> {
           ? Center(
               child: Text(
                 "لا توجد آيات محفوظة",
-                style: GoogleFonts.tajawal(
-                  fontSize: 18,
-                  color: AppColors.textDark,
-                ),
+                style: TextStyle(fontSize: 18, color: AppColors.textDark),
               ),
             )
           : ListView.builder(
@@ -65,64 +62,134 @@ class _FavScreenState extends State<FavScreen> {
               itemBuilder: (context, index) {
                 final fav = data[index];
                 return Card(
-                  elevation: 4,
-                  shadowColor: AppColors.accent.withOpacity(0.3),
+                  elevation: 6,
+                  shadowColor: AppColors.accent.withOpacity(0.2),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: Padding(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 12,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white,
+                          AppColors.accent.withOpacity(0.05),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // عنوان الكتاب والإصحاح
-                        Text(
-                          "${fav['book']} - الإصحاح ${fav['chapter']}",
-                          style: GoogleFonts.tajawal(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
-                          ),
+                        // العنوان (الكتاب + الإصحاح)
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.menu_book,
+                              color: AppColors.primary,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                "${fav['book']} - الإصحاح ${fav['chapter']}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
+
                         // نص الآية
                         Text(
                           fav['verse'],
-                          style: GoogleFonts.tajawal(
+                          style: TextStyle(
                             fontSize: 16,
+                            height: 1.6,
                             color: AppColors.textDark,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 16),
+
+                        // الأزرار (نسخ + حذف)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            // زر نسخ النص
-                            IconButton(
-                              icon: const Icon(
-                                Icons.copy,
-                                color: AppColors.primary,
+                            Tooltip(
+                              message: "نسخ الآية",
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.copy,
+                                  color: AppColors.primary,
+                                ),
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: fav['verse']),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("تم نسخ الآية"),
+                                    ),
+                                  );
+                                },
                               ),
-                              onPressed: () {
-                                Clipboard.setData(
-                                  ClipboardData(text: fav['verse']),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("تم نسخ الآية")),
-                                );
-                              },
                             ),
-                            // زر الحذف من المفضلة
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () async {
-                                await removeFav(
-                                  fav['book'],
-                                  fav['chapter'],
-                                  fav['verse'],
-                                );
-                              },
+                            Tooltip(
+                              message: "مشاركة الآية",
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.share,
+                                  color: AppColors.primary,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    ModalBottomSheetRoute(
+                                      builder: (context) => ShareVerseWidget(
+                                        book: fav['book'] ?? "",
+                                        chapter: fav['chapter'] ?? "",
+                                        verse: fav['verse']
+                                            .toString()
+                                            .split('.')
+                                            .first
+                                            .trim(),
+                                        verseText: fav['verse'] ?? "",
+                                      ),
+                                      isScrollControlled: false,
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("تم نسخ الآية"),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Tooltip(
+                              message: "إزالة من المفضلة",
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () async {
+                                  await removeFav(
+                                    fav['book'],
+                                    fav['chapter'],
+                                    fav['verse'],
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),

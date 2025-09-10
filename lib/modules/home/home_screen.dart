@@ -4,7 +4,6 @@ import 'package:arabic_holy_bible/modules/home/reflections_screen.dart';
 import 'package:arabic_holy_bible/modules/home/search_screen.dart';
 import 'package:arabic_holy_bible/shared/colors/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../shared/data/bible_loader.dart';
 
@@ -130,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.primary,
         title: Text(
           "الكتاب المقدس",
-          style: GoogleFonts.cairo(
+          style: TextStyle(
             color: AppColors.textLight,
             fontWeight: FontWeight.bold,
           ),
@@ -168,67 +167,71 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       },
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        margin: const EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary,
+                      child: Card(
+                        elevation: 4,
+                        shadowColor: AppColors.accent.withOpacity(0.3),
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: const Icon(
+                        color: AppColors.secondary,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 20,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
                                 Icons.history,
                                 color: AppColors.textLight,
+                                size: 26,
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              flex: 10,
-                              child: Text(
-                                lastRead ?? "",
-                                style: GoogleFonts.cairo(
-                                  color: AppColors.textLight,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  lastRead ?? "",
+                                  style: const TextStyle(
+                                    color: AppColors.textLight,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: const Icon(
+                              const Icon(
                                 Icons.arrow_back_ios,
                                 color: AppColors.textLight,
                                 size: 18,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
-                        flex: 2,
-                        child: Container(color: AppColors.primary, height: 5),
+                        child: Container(
+                          height: 1.5,
+                          color: AppColors.primary.withOpacity(0.4),
+                        ),
                       ),
-                      Expanded(
-                        flex: 2,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Text(
-                          textAlign: TextAlign.center,
-                          "الاسفار",
-                          style: GoogleFonts.cairo(
+                          "الأسفار",
+                          style: const TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w700,
                             color: AppColors.primary,
                           ),
                         ),
                       ),
                       Expanded(
-                        flex: 2,
-                        child: Container(color: AppColors.primary, height: 5),
+                        child: Container(
+                          height: 1.5,
+                          color: AppColors.primary.withOpacity(0.4),
+                        ),
                       ),
                     ],
                   ),
@@ -264,17 +267,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           child: Card(
+                            elevation: 2,
+                            shadowColor: AppColors.accent.withOpacity(0.2),
                             color: AppColors.textLight,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            elevation: 3,
-                            shadowColor: AppColors.accent.withOpacity(0.3),
                             child: Center(
                               child: Text(
                                 books[index],
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.cairo(
+                                style: const TextStyle(
                                   color: AppColors.secondary,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
@@ -295,8 +298,15 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: AppColors.textLight.withOpacity(0.6),
         currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: "الأسفار"),
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              "assets/icon/holyBible.png",
+              height: 20,
+              color: AppColors.background,
+            ),
+            label: "الأسفار",
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "بحث"),
           BottomNavigationBarItem(
             icon: Icon(Icons.description),

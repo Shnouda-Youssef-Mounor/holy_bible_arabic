@@ -4,7 +4,6 @@ import 'package:arabic_holy_bible/shared/data/database_helper.dart';
 import 'package:arabic_holy_bible/shared/widgets/share_verse_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ChaptersScreen extends StatefulWidget {
   final String title;
@@ -165,7 +164,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
         appBar: AppBar(
           title: Text(
             widget.title,
-            style: GoogleFonts.cairo(fontWeight: FontWeight.bold, fontSize: 22),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
           backgroundColor: AppColors.secondary,
           foregroundColor: AppColors.background,
@@ -195,7 +194,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                         child: ChoiceChip(
                           label: Text(
                             element,
-                            style: GoogleFonts.cairo(
+                            style: TextStyle(
                               color: selectedChapter == element
                                   ? AppColors.textLight
                                   : AppColors.textDark,
@@ -287,7 +286,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                                         ),
                                         title: Text(
                                           "احفظ تقدمي",
-                                          style: GoogleFonts.cairo(
+                                          style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
                                             color: AppColors.textDark,
@@ -327,7 +326,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                                         ),
                                         title: Text(
                                           "نسخ الآية",
-                                          style: GoogleFonts.cairo(
+                                          style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
                                             color: AppColors.textDark,
@@ -359,7 +358,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                                         ),
                                         title: Text(
                                           "إضافة للمفضلة",
-                                          style: GoogleFonts.cairo(
+                                          style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
                                             color: AppColors.textDark,
@@ -399,7 +398,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                                           isHighlighted
                                               ? "إزالة التمييز"
                                               : "تمييز الآية",
-                                          style: GoogleFonts.cairo(
+                                          style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
                                             color: AppColors.textDark,
@@ -438,7 +437,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                                         ),
                                         title: Text(
                                           "مشاركة الآية",
-                                          style: GoogleFonts.cairo(
+                                          style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
                                             color: AppColors.textDark,
@@ -488,7 +487,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                           ),
                           child: Text(
                             verseText,
-                            style: GoogleFonts.tajawal(
+                            style: TextStyle(
                               fontSize: verseFontSize,
                               height: lineHeight,
                               color: AppColors.textDark,
@@ -500,14 +499,11 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                       final reflection = reflections[index - verses.length];
                       return Card(
                         color: AppColors.textLight,
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 12,
-                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        elevation: 4,
+                        elevation: 3,
                         shadowColor: AppColors.accent.withOpacity(0.2),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
@@ -520,7 +516,7 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                                   Expanded(
                                     child: Text(
                                       reflection['title'] ?? '',
-                                      style: GoogleFonts.cairo(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                         color: AppColors.textDark,
@@ -534,20 +530,38 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
                                     ),
                                     onPressed: () =>
                                         deleteReflection(reflection['id']),
+                                    tooltip: "حذف التأمل",
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 reflection['description'] ?? '',
-                                style: GoogleFonts.cairo(
+                                style: TextStyle(
                                   fontSize: 16,
                                   height: 1.5,
                                   color: AppColors.textDark.withOpacity(0.9),
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Text("الاعداد ${reflection['verse_numbers']}"),
+                              const SizedBox(height: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 6,
+                                  horizontal: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  "سفر ${reflection['book']} | الإصحاح ${reflection['chapter']} | آيات ${reflection['verse_numbers']}",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.textDark.withOpacity(0.8),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),

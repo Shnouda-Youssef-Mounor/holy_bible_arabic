@@ -1,7 +1,6 @@
 import 'package:arabic_holy_bible/shared/colors/app_colors.dart';
 import 'package:arabic_holy_bible/shared/data/bible_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -51,7 +50,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const SizedBox(height: 30),
                 Text(
                   "الكتاب المقدس",
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
@@ -61,10 +60,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 Text(
                   "مرحباً بك في تطبيق الكتاب المقدس\nنسخة عربية أوفلاين",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.cairo(
-                    fontSize: 18,
-                    color: AppColors.textDark,
-                  ),
+                  style: TextStyle(fontSize: 18, color: AppColors.textDark),
                 ),
                 const SizedBox(height: 40),
                 _loading
@@ -86,7 +82,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         onPressed: _startApp,
                         child: Text(
                           "ابدأ الآن",
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 20,
                             color: AppColors.textLight,
                           ),
@@ -106,7 +102,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
                 "Developed by Shino",
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 14,
                   color: AppColors.textDark.withOpacity(0.6),
                 ),

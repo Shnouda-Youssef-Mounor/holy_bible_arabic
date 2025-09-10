@@ -1,7 +1,6 @@
 import 'package:arabic_holy_bible/shared/colors/app_colors.dart';
 import 'package:arabic_holy_bible/shared/data/database_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ReflectionsScreen extends StatefulWidget {
   const ReflectionsScreen({super.key});
@@ -37,7 +36,7 @@ class _ReflectionsScreenState extends State<ReflectionsScreen> {
       appBar: AppBar(
         title: Text(
           "التأملات",
-          style: GoogleFonts.cairo(fontWeight: FontWeight.bold, fontSize: 22),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         ),
         centerTitle: true,
         foregroundColor: AppColors.background,
@@ -49,7 +48,7 @@ class _ReflectionsScreenState extends State<ReflectionsScreen> {
           ? Center(
               child: Text(
                 "لا توجد تأملات بعد",
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 18,
                   color: AppColors.textDark.withOpacity(0.7),
                 ),
@@ -79,7 +78,7 @@ class _ReflectionsScreenState extends State<ReflectionsScreen> {
                             Expanded(
                               child: Text(
                                 reflection['title'] ?? '',
-                                style: GoogleFonts.cairo(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                   color: AppColors.textDark,
@@ -97,7 +96,7 @@ class _ReflectionsScreenState extends State<ReflectionsScreen> {
                         const SizedBox(height: 8),
                         Text(
                           reflection['description'] ?? '',
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 16,
                             height: 1.5,
                             color: AppColors.textDark.withOpacity(0.9),
@@ -115,7 +114,7 @@ class _ReflectionsScreenState extends State<ReflectionsScreen> {
                           ),
                           child: Text(
                             "سفر ${reflection['book']} | الإصحاح ${reflection['chapter']} | آيات ${reflection['verse_numbers']}",
-                            style: GoogleFonts.cairo(
+                            style: TextStyle(
                               fontSize: 14,
                               color: AppColors.textDark.withOpacity(0.8),
                               fontWeight: FontWeight.w500,

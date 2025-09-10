@@ -23,7 +23,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Arabic Holy Bible',
-      theme: ThemeData(fontFamily: 'Arial'),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        fontFamily: 'Cairo',
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(fontFamily: 'Cairo'),
+          bodyMedium: TextStyle(fontFamily: 'Cairo'),
+          bodySmall: TextStyle(fontFamily: 'Cairo'),
+
+          titleLarge: TextStyle(
+            fontFamily: 'ElMessiri',
+            fontWeight: FontWeight.bold,
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'ElMessiri',
+            fontWeight: FontWeight.w600,
+          ),
+          titleSmall: TextStyle(
+            fontFamily: 'ElMessiri',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       locale: const Locale('ar', ''),
